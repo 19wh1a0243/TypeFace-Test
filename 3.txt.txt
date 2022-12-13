@@ -1,0 +1,12 @@
+<<Designing a datastore to save monitoring data of a service>>
+
+
+RxDataStore<Preferences> dataStore = new RxPreferenceDataStoreBuilder(context, /name=/ "settings").build();
+Preferences.Key<Integer> EXAMPLE_COUNTER = PreferencesKeys.int("example_counter");
+Flowable<Integer> exampleCounterFlow = dataStore.data().map(prefs -> prefs.get(EXAMPLE_COUNTER));
+Single<Preferences> updateResult =  dataStore.updateDataAsync(prefsIn -> {
+  	MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
+  	Integer currentInt = prefsIn.get(INTEGER_KEY);
+  	mutablePreferences.set(INTEGER_KEY, currentInt != null ? currentInt + 1 : 1);
+  	return Single.just(mutablePreferences);
+});
